@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="prubaTecnicaDicsysModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Contratista">
+    <Key>
+      <PropertyRef Name="dni" />
+    </Key>
+    <Property Name="nombre" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="apellido" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="legajo" Type="Int32" Nullable="false" />
+    <Property Name="dni" Type="Int32" Nullable="false" />
+    <Property Name="cuil" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="email" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="celular" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="idEmpresa" Type="Int32" Nullable="false" />
+    <Property Name="idUsuario" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Empresas" Relationship="Self.FK_Contratista_Empresas" FromRole="Contratista" ToRole="Empresas" />
+    <NavigationProperty Name="usuario" Relationship="Self.FK_Contratista_usuario" FromRole="Contratista" ToRole="usuario" />
+  </EntityType>
+  <EntityType Name="Empresas">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" />
+    <Property Name="nombre" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="Contratista" Relationship="Self.FK_Contratista_Empresas" FromRole="Empresas" ToRole="Contratista" />
+  </EntityType>
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="usuario">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="userName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="password" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="status" Type="String" MaxLength="13" FixedLength="false" Unicode="true" />
+    <Property Name="superSu" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Contratista" Relationship="Self.FK_Contratista_usuario" FromRole="usuario" ToRole="Contratista" />
+  </EntityType>
+  <Association Name="FK_Contratista_Empresas">
+    <End Role="Empresas" Type="Self.Empresas" Multiplicity="1" />
+    <End Role="Contratista" Type="Self.Contratista" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Empresas">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="Contratista">
+        <PropertyRef Name="idEmpresa" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Contratista_usuario">
+    <End Role="usuario" Type="Self.usuario" Multiplicity="1" />
+    <End Role="Contratista" Type="Self.Contratista" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="usuario">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="Contratista">
+        <PropertyRef Name="idUsuario" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="DBModel" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Contratista" EntityType="Self.Contratista" />
+    <EntitySet Name="Empresas" EntityType="Self.Empresas" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+    <EntitySet Name="usuario" EntityType="Self.usuario" />
+    <AssociationSet Name="FK_Contratista_Empresas" Association="Self.FK_Contratista_Empresas">
+      <End Role="Empresas" EntitySet="Empresas" />
+      <End Role="Contratista" EntitySet="Contratista" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Contratista_usuario" Association="Self.FK_Contratista_usuario">
+      <End Role="usuario" EntitySet="usuario" />
+      <End Role="Contratista" EntitySet="Contratista" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
